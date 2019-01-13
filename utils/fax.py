@@ -1,5 +1,6 @@
 class FaxUtils(object):
     def get_send_abbreviation(self):
+        """Returns a list of Fax T.30 Abbreviations"""
         abbrev = {
             "CFR": "Confirmation To Receive",
             "CIG": "Calling Subscriber Identification",
