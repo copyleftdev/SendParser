@@ -52,3 +52,33 @@ class FaxUtils(object):
             "XID": "EXchange IDentification procedure",
         }
         return abbrev
+
+    def get_inbound_codes():
+
+        error_codes = {
+            "errors": [
+                {
+                    "329": "Special Info. Tone: invalid #",
+                    "331": "Special Info. Tone: no circuit",
+                    "327": "Invalid Number or No service",
+                    "303": "Fast busy (trunk lines busy)",
+                    "301": "Normal Busy",
+                    "318": "Dialtone remains after dial sequence",
+                    "325": "Ringing timed out (no answer)",
+                    "328": "Possible dead line after dial",
+                    "316": "Answer detected, probable human",
+                    "4104": "Tx Error",
+                    "328215": "T30 Protocol error",
+                }
+            ],
+            "CALLCONNECTED": [{"0": "CallerID"}],
+            "CALLOVER": [
+                {
+                    "0=NMSINFO": "Call over duration -> ## secs.",
+                    "0=BTINFO": "Call over duration -> XX secs.",
+                }
+            ],
+            "CALL_DISCONNECTED": [
+                {"-2=BTINFO": "CNG tone detected for voice only user!"}
+            ],
+        }
