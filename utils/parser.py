@@ -4,9 +4,12 @@ from tinydb import TinyDB, Query
 
 
 class LogParser(object):
+    def __init__(self, dbname):
+        self.dbname = dbname
+        self.db = TinyDB("data/{}.db".format(self.dbname))
+        self.q = Query()
+
     def parser(self, log_line):
-        cur_epoch = int(time.time())
-        db = TinyDB("data/sendparser.{}.db".format(cur_epoch))
 
         DATE_RE = r"(\w{3}\s+\d+\s\d+:\d+:\d+)"
         SERVER_NAME_RE = r"(\sdid\d+)"
@@ -30,12 +33,19 @@ class LogParser(object):
             log_transform = {
                 "date": d_match[0],
                 "server": s_match[0].replace(" ", ""),
-                "inbound_worker": in_match[0].replace("inbound[", "").replace("]", ""),
+                "worker": in_match[0].replace("inbound[", "").replace("]", ""),
                 "email": em_match[0].replace("|2", ""),
                 "did": did_match[0],
                 "state": stat_match[0].replace("stat=", ""),
                 "message_id": "".join(msgid_match),
             }
 
-            print(log_transform)
-            db.insert(log_transform)
+            self.db.insert(log_transform)
+
+    def get_successful_jobs(self):
+        results = self.db.search(self.q.state == "FAXCOMPLETE")
+        return results
+
+    def get_failed_jobs(self):
+        results = self.db.search(self.q.state == "FAXERROR")
+        return results
